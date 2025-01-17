@@ -144,7 +144,6 @@ const paymentRazorpay = async(req,res) => {
 }
 
 //Api controller function to verify razorpay payment
-
 const verifyRazorpay = async(req,res) =>{
   try {
       const {razorpay_order_id} = req.body;
