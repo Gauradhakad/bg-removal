@@ -1,6 +1,6 @@
 import { Webhook } from "svix";
 import userModel from "../models/userModel.js";
-import razorpay from "razorpay"
+import razorpay from "razorpay";
 import transactionModel from "../models/transactionModel.js";
 
 //Api controller function to manage clerk user with database
@@ -40,13 +40,13 @@ const clerkWebhooks = async (req, res) => {
           photo: data.image_url,
         };
 
-        await userModel.findOneAndUpdate({clerkId:data.id},userData);
-        res.json({})
+        await userModel.findOneAndUpdate({ clerkId: data.id }, userData);
+        res.json({});
         break;
       }
       case "user.deleted": {
-        await userModel.findOneAndDelete({clerkId:data.id})
-        res.json({})
+        await userModel.findOneAndDelete({ clerkId: data.id });
+        res.json({});
         break;
       }
       default:
@@ -59,59 +59,58 @@ const clerkWebhooks = async (req, res) => {
 };
 
 // Api controller function to get user available credits data
-const userCredits = async(req,res) =>{
+const userCredits = async (req, res) => {
   try {
-      const {clerkId} = req.body;
+    const { clerkId } = req.body;
 
-      const userData = await userModel.findOne({clerkId});
+    const userData = await userModel.findOne({ clerkId });
 
-      res.json({ success: true, credits: userData.creditBalance });
-
+    res.json({ success: true, credits: userData.creditBalance });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });
   }
-}
+};
 
 // gateway intialized
 const razorpayInstance = new razorpay({
-  key_id:process.env.RAZORPAY_KEY_ID,
-  key_secret:process.env.RAZORPAY_KEY_SECRET
-})
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
-// API to make payment for credits 
-const paymentRazorpay = async(req,res) => {
+// API to make payment for credits
+const paymentRazorpay = async (req, res) => {
   try {
-    const {clerkId,planId} = req.body;
-    const userData = await userModel.findOne({clerkId});
+    const { clerkId, planId } = req.body;
+    const userData = await userModel.findOne({ clerkId });
 
-    if(!userData || !planId){
-      return res.json({success:false, message:"Invalid Credentials"})
+    if (!userData || !planId) {
+      return res.json({ success: false, message: "Invalid Credentials" });
     }
 
-    let credits,plan,amount,date
+    let credits, plan, amount, date;
 
-    switch(planId){
-      case 'Basic':
-        plan = "Basic"
-        credits = 100
-        amount = 800
+    switch (planId) {
+      case "Basic":
+        plan = "Basic";
+        credits = 100;
+        amount = 800;
         break;
 
-      case 'Advanced':
+      case "Advanced":
         plan = "Advanced";
-        credits = 500
-        amount = 3500
+        credits = 500;
+        amount = 3500;
         break;
 
-      case 'Business':
+      case "Business":
         plan = "Business";
-        credits = 5000
-        amount = 35000
+        credits = 5000;
+        amount = 35000;
         break;
     }
 
-    date = Date.now()
+    date = Date.now();
 
     // creating Transaction
     const transactionData = {
@@ -119,56 +118,61 @@ const paymentRazorpay = async(req,res) => {
       plan,
       amount,
       credits,
-      date
-    }
+      date,
+    };
 
     const newTransaction = await transactionModel.create(transactionData);
 
     const options = {
-      amount: amount * 100 ,
+      amount: amount * 100,
       currency: process.env.CURRENCY,
-      receipt : newTransaction._id
-    }
+      receipt: newTransaction._id,
+    };
 
-    await razorpayInstance.orders.create(options,(error,order)=>{
-      if(error){
-       return res.json({success:false,message:error})
+    await razorpayInstance.orders.create(options, (error, order) => {
+      if (error) {
+        return res.json({ success: false, message: error });
       }
-     return res.json({success:true,order})
-    })
-
+      return res.json({ success: true, order });
+    });
   } catch (error) {
-     console.log(error.message);
-     res.json({ success: false, message: error.message });
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
   }
-}
+};
 
 //Api controller function to verify razorpay payment
-const verifyRazorpay = async(req,res) =>{
+const verifyRazorpay = async (req, res) => {
   try {
-      const {razorpay_order_id} = req.body;
-      const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+    const { razorpay_order_id } = req.body;
+    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
 
-      if(orderInfo.status === "paid"){
-        const transactionData = await transactionModel.findById(orderInfo.receipt)
-        if(transactionData.payment){
-          return res.json({success:false,message:"payment failed"})
-        }
-
-        // Adding credits in uder data
-        const userData = await userModel.findOne({clerkId:transactionData.clerkId});
-        const creditBalance = userData.creditBalance + transactionData.credits
-        await userModel.findByIdAndUpdate(userData._id,{creditBalance});
-
-        // making the payment true
-        await transactionModel.findByIdAndUpdate(transactionData._id,{payment:true});
-
-        res.json({success:true,message:"Credits Added"})
+    if (orderInfo.status === "paid") {
+      const transactionData = await transactionModel.findById(
+        orderInfo.receipt
+      );
+      if (transactionData.payment) {
+        return res.json({ success: false, message: "payment failed" });
       }
+
+      // Adding credits in uder data
+      const userData = await userModel.findOne({
+        clerkId: transactionData.clerkId,
+      });
+      const creditBalance = userData.creditBalance + transactionData.credits;
+      await userModel.findByIdAndUpdate(userData._id, { creditBalance });
+
+      // making the payment true
+      await transactionModel.findByIdAndUpdate(transactionData._id, {
+        payment: true,
+      });
+
+      res.json({ success: true, message: "Credits Added" });
+    }
   } catch (error) {
     console.log(error);
-    res.json({success:false,message:error.message})
+    res.json({ success: false, message: error.message });
   }
-}
+};
 
-export { clerkWebhooks, userCredits , paymentRazorpay,verifyRazorpay};
+export { clerkWebhooks, userCredits, paymentRazorpay, verifyRazorpay };
