@@ -4,7 +4,7 @@ import razorpay from "razorpay";
 import transactionModel from "../models/transactionModel.js";
 
 //Api controller function to manage clerk user with database
-// http:localhost:4000/api/user/webhooks
+
 const clerkWebhooks = async (req, res) => {
   try {
     //create a svix instance with clerk webhook secret
