@@ -8,7 +8,7 @@ const Upload = () => {
 
   return (
     <div className="pb-16">
-      <h1 className="text-center text-2xl bg-gradient-to-r py-6 md:py-16 from-gray-900 to-gray-300 bg-clip-text text-transparent md:text-3xl lg:text-4xl mt-4 font-semibold">
+      <h1 className="text-center text-2xl bg-gradient-to-r py-6 md:py-16 from-purple-700 to-blue-100 bg-clip-text text-transparent md:text-3xl lg:text-4xl mt-4 font-semibold">
         See the magic. try now
       </h1>
       <div className="text-center mb-24">

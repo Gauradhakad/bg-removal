@@ -18,19 +18,19 @@ const Navbar = () => {
   },[isSignedIn])
 
   return (
-    <div className="flex items-center justify-between mx-4 py-3 lg:mx-44 ">
+    <div className="flex items-center justify-between mx-4 py-3 md:mx-32 ">
       <Link to="/">
         {" "}
         <img
-          className="w-19 h-8 sm:w-24 sm:h-12 md:w-32 bg-contain rounded-full"
+          className="w-19 h-8 sm:w-24 sm:h-12 md:w-[160px] md:h-[60px] bg-contain rounded-full"
           src={assets.bg_logo}
           alt=""
         />
       </Link>
       {isSignedIn ? (
         <div className='flex items-center gap-2 sm:gap-3 '>
-          <button onClick={()=>navigate('/buy')} className='flex items-center gap-2 bg-blue-100 px-4 sm:px-7 py-1.5 sm:py-2.5 rounded-full  hover:scale-105 transition-all duration-700 '><img className="w-5" src={assets.credit_icon} alt="" /><p className='text-xs sm:text-sm font-medium text-gray-600 '>credits : {credit}</p></button>
-          <p className='text-gray-600 max-sm:hidden'>Hi {user.fullName}</p>
+          <button onClick={()=>navigate('/buy')} className='flex items-center gap-2 bg-blue-200 px-4 sm:px-7 py-1.5 sm:py-2.5 rounded-full  hover:scale-105 transition-all duration-700 '><img className="w-5" src={assets.credit_icon} alt="" /><p className='text-xs sm:text-sm font-medium text-black '>credits : {credit}</p></button>
+          <p className='text-gray-200 max-sm:hidden'>Hi {user.fullName}</p>
           <UserButton/></div>
       ) : (
         <button

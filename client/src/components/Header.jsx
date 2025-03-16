@@ -3,13 +3,13 @@ import { assets } from '../Assets/assets';
 import { AppContext } from '../context/AppContext';
 
 const Header = () => {
-  const {removeBg} = useContext(AppContext);
-  
+  const { removeBg } = useContext(AppContext);
+  // from-violet-600 to-fuchsia-500
   return (
     <div className="flex items-center justify-between max-sm:flex-col-reverse gap-10 px-4 mt-10 lg:px-44 sm:mt-20">
       {/* -- Left side -- */}
       <div>
-        <h1 className="text-3xl xl:text-5xl 2xl:text-6xl font-bold text-neutral-700 leading-tight">
+        <h1 className="text-4xl sm:text-6xl md:text-6xl font-bold text-neutral-300 leading-tight">
           Remove the <br className="max-md:hidden" />
           <span className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
             Background
@@ -17,8 +17,8 @@ const Header = () => {
           from <br className="max-md:hidden" />
           images for free
         </h1>
-    
-        <p className="my-6 text-[15px] text-gray-700 font-bold ">
+
+        <p className="my-6 text-[15px] sm:text-[19px] text-gray-300 ">
           Remove Backgrounds from Images Instantly – For Free!
           <br className="max-sm:hidden" /> Easily remove backgrounds from your
           photos with our free online{" "}
@@ -31,7 +31,13 @@ const Header = () => {
           transform your visuals effortlessly!
         </p>
         <div>
-          <input onChange={e => removeBg(e.target.files[0])} type="file" accept="image/*" id="upload1" hidden />
+          <input
+            onChange={(e) => removeBg(e.target.files[0])}
+            type="file"
+            accept="image/*"
+            id="upload1"
+            hidden
+          />
           <label
             className="inline-flex gap-3 px-8 py-3.5 rounded-full cursor-pointer bg-gradient-to-r from-violet-600 to-fuchsia-500 m-auto hover:scale-105 transition-all duration-700"
             htmlFor="upload1"
@@ -43,10 +49,10 @@ const Header = () => {
       </div>
 
       {/* -- right side -- */}
-      <div className="w-full max-w-md sm:mr-0 mr-4">
+      <div className=" max-w-md sm:mr-0 mr-4">
         <img
-          className="w-full h-auto sm:mt-0 mt-4"
-          src={assets.header_img}
+          className=" sm:mt-0 mt-4 rounded-3xl"
+          src="/background-remover.jpg"
           alt="Header"
         />
       </div>

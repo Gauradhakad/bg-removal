@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { assets } from '../Assets/assets';
 
 const BgSlider = () => {
 
@@ -11,18 +10,18 @@ const BgSlider = () => {
 
   return (
     <div className='pb-10 md:py-20 mx-2 '>
-      <h1 className=" mb-12 sm:mb-20 text-center text-2xl bg-gradient-to-r from-gray-900 to-gray-300 bg-clip-text text-transparent md:text-3xl lg:text-4xl mt-4 font-semibold">
+      <h1 className=" mb-12 sm:mb-20 text-center text-2xl bg-gradient-to-r from-gray-500 to-gray-200 bg-clip-text text-transparent md:text-3xl lg:text-4xl mt-4 font-semibold">
         Remove Background With High <br /> Quality and Accuracy
       </h1>
 
-      <div className='relative w-full max-w-3xl overflow-hidden m-auto rounded-xl'>
+      <div className='relative w-full  max-w-3xl overflow-hidden m-auto rounded-xl'>
         <img
-          src={assets.image_w_bg}
+          src="/Spider-Man.jpg"
           style={{ clipPath: `inset(0 ${100.2 - sliderPosition}% 0 0)` }}
           alt=""
         />
         <img className='absolute top-0 left-0 w-full h-full '
-          src={assets.image_wo_bg}
+          src="/spider-removed.jpg"
           style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
           alt=""
         />
